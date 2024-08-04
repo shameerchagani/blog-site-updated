@@ -1,0 +1,63 @@
+<body style="background:url(<%=blog.image%>);background-size:cover;">
+  <div class="container">
+    <%if(user){%>
+    <div class="d-sm-flex justify-content-between">
+      <div class="my-3">
+        <a href="/blogs/newblog" class="btn btn-info btn-lg"><i class="fa fa-plus mr-2"></i>New Post</a>
+      </div>
+      <div class="lead my-3">
+        Welcome,
+        <span class="text-bolder text-danger"><%=user.name.toUpperCase()%></span>
+      </div>
+    </div>
+    <%}%>
+  </div>
+  <div class="container mb-5">
+    <div class="card mt-3" style="background:rgba(0,0,0,0.8); color: white; box-shadow: -2px -3px 10px #fd8272 ">
+      <div class="card-body">
+        <h5 class="card-title"><%=blog.title%></h5>
+        <div class="row d-flex">
+          <h6 class="card-subtitle mb-2 text-secondary col-lg-8">
+            <%=blog.description%>
+          </h6>
+          <span class="text-muted">
+            <strong>Published on:</strong>&nbsp;&nbsp;<%=blog.created.toLocaleDateString()%>
+                      </span>
+        </div>
+        <hr />
+        <p class="card-text"><%-blog.snippet%></p>
+        <hr />
+        <div class="d-flex justify-content-end">
+          <%if(user){%>
+          <%if(blog.author === user.name){%>
+          <a data-doc="<%=blog._id%>" class="delete btn btn-primary mr-2">
+            <i class="fa fa-trash mr-2"></i>Delete
+          </a>
+          <a href="#" class="btn btn-dark mr-2">
+            <i class="fa fa-pen mr-2"></i>Edit
+          </a>
+          <%}%>
+          <%}%>
+          <a href="/blogs/" class="btn btn-info"
+            ><i class="fa fa-book mr-2"></i>View All</a
+          >
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  
+  <script>
+    const trashcan = document.querySelector("a.delete");
+    trashcan.addEventListener("click", (e) => {
+      const endpoint = `/blogs/${trashcan.dataset.doc}`;
+      fetch(endpoint, {
+        method: "DELETE",
+      })
+        .then((response) => response.json())
+        .then((data) => (window.location.href = data.redirect))
+        .catch((err) => console.log(err));
+    });
+  </script>
+</body>
